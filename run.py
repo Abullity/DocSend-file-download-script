@@ -1,5 +1,7 @@
 import asyncio
+
 import aiohttp
+import yarl
 
 
 URL = ""        # https://docsend.com/view/...
@@ -17,7 +19,7 @@ async def get_pdf(session: aiohttp.ClientSession):
         response_json = await resp.json()
 
         if "url" in response_json:
-            async with session.get(response_json["url"]) as resp:
+            async with session.get(yarl.URL(response_json["url"], encoded=True)) as resp:
                 with open("test.pdf", "wb") as pdf_file:
                     pdf_file.write(await resp.content.read())
         else:
